@@ -4,11 +4,14 @@ import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
 import * as ROUTES from '../constants/routes';
 import { DEFAULT_IMAGE_PATH } from '../constants/path';
+import useUser from '../hooks/use-user';
 
 const Header = () => {
+	const { user: loggedInUser } = useContext(UserContext);
+	const { user } = useUser(loggedInUser?.uid);
 	const { firebase } = useContext(FirebaseContext);
-	const { user } = useContext(UserContext);
 	const history = useHistory();
+
 	return (
 		<header className='h-16 bg-white border-b border-gray-primary mb-8'>
 			<div className='container mx-auto max-w-screen-lg h-full'>
@@ -19,13 +22,13 @@ const Header = () => {
 								<img
 									src='/images/logo.png'
 									alt='Instagram'
-									className='mt-2 w 6/12'
+									className='mt-2 w-6/12'
 								/>
 							</Link>
 						</h1>
 					</div>
 					<div className='text-gray-700 text-center flex items-center align-items'>
-						{user ? (
+						{loggedInUser ? (
 							<>
 								<Link to={ROUTES.DASHBOARD} aria-label='Dashboard'>
 									<svg
@@ -43,6 +46,7 @@ const Header = () => {
 										/>
 									</svg>
 								</Link>
+
 								<button
 									type='button'
 									title='Sign Out'
@@ -50,8 +54,8 @@ const Header = () => {
 										firebase.auth().signOut();
 										history.push(ROUTES.LOGIN);
 									}}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') {
+									onKeyDown={(event) => {
+										if (event.key === 'Enter') {
 											firebase.auth().signOut();
 											history.push(ROUTES.LOGIN);
 										}
@@ -72,22 +76,23 @@ const Header = () => {
 										/>
 									</svg>
 								</button>
-								<div className='flex items-center cursor-pointer'>
-									<Link to={`/p/${user?.username}`}>
-										<img
-											className='rouded-full h-8 w-8 flex'
-											src={`/images/avatars/${user?.username}.jpg`}
-											alt={`${user?.username} profile`}
-											onError={(e) => {
-												e.target.src = DEFAULT_IMAGE_PATH;
-											}}
-										/>
-									</Link>
-								</div>
+								{user && (
+									<div className='flex items-center cursor-pointer'>
+										<Link to={`/p/${user?.username}`}>
+											<img
+												className='rounded-full h-8 w-8 flex'
+												src={`/images/avatars/${user?.username}.jpg`}
+												alt={`${user?.username} profile`}
+												onError={(e) => {
+													e.target.src = DEFAULT_IMAGE_PATH;
+												}}
+											/>
+										</Link>
+									</div>
+								)}
 							</>
 						) : (
 							<>
-								{' '}
 								<Link to={ROUTES.LOGIN}>
 									<button
 										type='button'

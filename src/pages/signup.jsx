@@ -4,7 +4,7 @@ import FirebaseContext from '../context/firebase';
 
 import * as ROUTES from '../constants/routes';
 
-import { doesUsernameExists } from '../services/firebase';
+import { doesUsernameExist } from '../services/firebase';
 
 const Signup = () => {
 	const history = useHistory();
@@ -20,7 +20,7 @@ const Signup = () => {
 	const handleSignUp = async (e) => {
 		e.preventDefault();
 
-		const usernameExists = await doesUsernameExists(username);
+		const usernameExists = await doesUsernameExist(username);
 		if (!usernameExists) {
 			try {
 				const createdUserResult = await firebase

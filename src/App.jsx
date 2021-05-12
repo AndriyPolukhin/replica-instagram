@@ -8,6 +8,7 @@ import ProtectedRoute from './helpers/protected-route';
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/signup'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
+const Profile = lazy(() => import('./pages/profile'));
 const NotFound = lazy(() => import('./pages/notfound'));
 
 const App = () => {
@@ -20,10 +21,10 @@ const App = () => {
 						<Switch>
 							<Route path={ROUTES.LOGIN} component={Login} />
 							<Route path={ROUTES.SIGN_UP} component={SignUp} />
+							<Route path={ROUTES.PROFILE} component={Profile} />
 							<ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
 								<Dashboard />
 							</ProtectedRoute>
-
 							<Route component={NotFound} />
 						</Switch>
 					</Suspense>
